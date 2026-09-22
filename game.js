@@ -50,4 +50,50 @@ const MISSIONS=[
 function fmt(n){if(!Number.isFinite(n))n=0;if(n<1000)return n<10?n.toFixed(1).replace(".0",""):Math.floor(n).toLocaleString("it-IT");const u=["K","M","B","T"];let i=-1;while(n>=1000&&i<u.length-1){n/=1000;i++}return n.toFixed(n<10?1:0)+u[i]}
 function hash(x,y){let n=(x*374761393+y*668265263)|0;n=(n^(n>>>13))*1274126177;return ((n^(n>>>16))>>>0)/4294967295}
 function terrainFor(x,y){const n=hash(x+17,y-31);if(n<.20)return"fertile";if(n<.42)return"forest";if(n<.60)return"rock";if(n<.80)return"plains";return"coast"}
-function defaultState(){const tiles=[];for(let y=0;y<GRID;y++)for(let x=0;x<GRID;x++){const dx=x-5,dy=y-5,unlocked=Math.abs(dx)<=1&&Math.abs(dy)<=1;tiles.push({x,y,
+function defaultState(){const tiles=[];for(let y=0;y<GRID;y++)for(let x=0;x<GRID;x++){const dx=x-5,dy=y-5,unlocked=Math.abs(dx)<=1&&Math.abs(dy)<=1;tiles.push({x,y,unlocked,terrain:terrainFor(x,y),building:null,level:0,spec:null})}return{version:5,resources:{coins:420,food:30,grain:0,flour:0,wood:48,stone:24,goods:0},tiles,lastSave:Date.now(),happiness:68,totalEarned:0,totalBuilt:0,mission:0,claimed:0,jobs:{gather:0,civic:0,festival:0,salvage:0}}}
+function load(){try{
+  const raw=localStorage.getItem(SAVE_KEY)||localStorage.getItem(LEGACY_SAVE_KEY);
+  if(!raw)return defaultState();
+  const s=JSON.parse(raw),b=defaultState();
+  s.version=5;s.resources={...b.resources,...s.resources};s.tiles=s.tiles||b.tiles;
+  s.happiness=Number.isFinite(s.happiness)?s.happiness:68;s.mission=s.mission||0;
+  s.jobs={...b.jobs,...(s.jobs||{})};
+  for(const t of s.tiles){if(t.spec===undefined)t.spec=null;if(t.fxUntil===undefined)t.fxUntil=0}
+  return s
+}catch{return defaultState()}}
+let state=load();
+function tileAt(x,y){return state.tiles.find(t=>t.x===x&&t.y===y)}
+function neighbors(t){return[[1,0],[-1,0],[0,1],[0,-1]].map(([dx,dy])=>tileAt(t.x+dx,t.y+dy)).filter(Boolean)}
+function isFrontier(t){return!t.unlocked&&neighbors(t).some(n=>n.unlocked)}
+function countBuilding(type){return state.tiles.filter(t=>t.unlocked&&t.building===type).length}
+function distinctBuildings(){return new Set(state.tiles.filter(t=>t.building).map(t=>t.building)).size}
+function totalLevels(){return state.tiles.reduce((s,t)=>s+(t.level||0),0)}
+function townLevel(){return Math.max(1,1+Math.floor((totalLevels()+state.tiles.filter(t=>t.unlocked).length*.35+distinctBuildings()*1.5)/6))}
+function population(){let n=3;for(const t of state.tiles){if(t.building!=="house")continue;n+=BUILDINGS.house.population+(t.level-1)*2+(t.spec==="apartments"?4:0)}return n}
+function parkHappiness(){let n=0;for(const t of state.tiles){if(!t.building)continue;const d=BUILDINGS[t.building];n+=(d.happiness||0)*Math.max(1,t.level*.45);if(t.spec==="botanical"||t.spec==="garden")n+=8;if(t.spec==="villa")n+=2}return n}
+function happinessTarget(){const pop=population(),food=state.resources.food;let h=56+parkHappiness();if(food>pop*4)h+=15;else if(food>pop*1.5)h+=7;else if(food<pop*.35)h-=28;else if(food<pop*.8)h-=12;const density=pop/Math.max(1,state.tiles.filter(t=>t.unlocked).length);if(density>2.8)h-=(density-2.8)*6;return clamp(h,15,100)}
+function levelMul(l){return 1+Math.max(0,l-1)*.64}
+function globalMul(){let m=.86+state.happiness*.0034;for(const t of state.tiles){if(t.building==="monument")m+=(BUILDINGS.monument.global||0)*t.level;if(t.spec==="academy")m+=.05}return m}
+function terrainMul(t){const d=t.building&&BUILDINGS[t.building];return d?.terrain?.[t.terrain]||1}
+function adjacencyMul(t){if(!t.building)return 1;const d=BUILDINGS[t.building],around=neighbors(t);let m=1;if(d.adj)for(const n of around)if(n.building&&d.adj[n.building])m+=d.adj[n.building];for(const n of around){if(!n.building)continue;const nd=BUILDINGS[n.building];if(nd.aura?.types.includes(t.building)){let a=nd.aura.value*n.level;if(n.spec==="millers"&&n.building==="windmill")a*=2;m+=a}if(n.spec==="plaza"&&t.building==="market")m+=.20}return m}
+function specRawMul(t,r){if(t.spec==="orchard"&&r==="food")return 2.0;if(t.spec==="estate"&&r==="grain")return 1.30;if(t.spec==="forester"&&r==="wood")return 1.40;if(t.spec==="deep"&&r==="stone")return 1.42;if(t.spec==="villa"&&r==="coins")return 1.30;return 1}
+function tileBaseMul(t){return levelMul(t.level)*terrainMul(t)*adjacencyMul(t)*globalMul()}
+function rawRates(){const out={coins:0,food:0,grain:0,flour:0,wood:0,stone:0,goods:0};for(const t of state.tiles){if(!t.unlocked||!t.building)continue;const d=BUILDINGS[t.building],m=tileBaseMul(t);for(const[r,v]of Object.entries(d.raw||{}))out[r]+=v*m*specRawMul(t,r);if(t.spec==="estate")out.coins+=.14*levelMul(t.level);if(t.spec==="resin"||t.spec==="masonry")out.goods+=.07*levelMul(t.level);if(t.spec==="artisan")out.coins+=.35*levelMul(t.level);if(t.spec==="fishery")out.food+=.55*levelMul(t.level)}out.coins+=population()*.025*(.6+state.happiness/100*.65);return out}
+function processDefs(t){const d=BUILDINGS[t.building];if(!d?.process)return null;const p=JSON.parse(JSON.stringify(d.process));if(t.spec==="factory"){for(const r in p.outputs)p.outputs[r]*=1.35;for(const r in p.inputs)p.inputs[r]*=1.15}if(t.spec==="artisan")return null;if(t.spec==="bazaar")for(const r in p.outputs)p.outputs[r]*=1.35;if(t.spec==="wholesale")for(const r in p.inputs)p.inputs[r]*=.75;if(t.spec==="fleet")for(const r in p.outputs)p.outputs[r]*=1.45;if(t.spec==="finegrind"&&t.building==="windmill")for(const r in p.outputs)p.outputs[r]*=1.30;if(t.spec==="breadline"&&t.building==="bakery")p.outputs.food*=1.38;if(t.spec==="patisserie"&&t.building==="bakery"){p.outputs.food*=.62;p.outputs.coins=(p.outputs.coins||0)+.62}return p}
+function economyPreview(){const out=rawRates();const inputs={food:population()*.032,grain:0,flour:0,wood:0,stone:0,goods:0};const procOut={coins:0,food:0,grain:0,flour:0,wood:0,stone:0,goods:0};for(const t of state.tiles){if(!t.building)continue;const p=processDefs(t);if(!p)continue;const m=tileBaseMul(t);for(const[r,v]of Object.entries(p.inputs))inputs[r]=(inputs[r]||0)+v*m;for(const[r,v]of Object.entries(p.outputs))procOut[r]=(procOut[r]||0)+v*m}for(const r in procOut)out[r]=(out[r]||0)+procOut[r]-(inputs[r]||0);return out}
+function simulateStep(dt){const raw=rawRates();for(const r in raw){state.resources[r]=(state.resources[r]||0)+raw[r]*dt;if(r==="coins")state.totalEarned+=raw[r]*dt}const foodNeed=population()*.032*dt;state.resources.food=Math.max(0,state.resources.food-foodNeed);for(const t of state.tiles){if(!t.unlocked||!t.building)continue;const p=processDefs(t);if(!p)continue;const m=tileBaseMul(t);let ratio=1;for(const[r,v]of Object.entries(p.inputs))ratio=Math.min(ratio,(state.resources[r]||0)/(v*m*dt||1));ratio=clamp(ratio,0,1);for(const[r,v]of Object.entries(p.inputs))state.resources[r]=Math.max(0,state.resources[r]-v*m*dt*ratio);for(const[r,v]of Object.entries(p.outputs)){const gain=v*m*dt*ratio;state.resources[r]=(state.resources[r]||0)+gain;if(r==="coins")state.totalEarned+=gain}}const target=happinessTarget(),speed=clamp(dt*.025,0,1);state.happiness+=(target-state.happiness)*speed}
+function simulate(seconds){let left=seconds;while(left>0){const d=Math.min(15,left);simulateStep(d);left-=d}}
+function canAfford(c){return Object.entries(c).every(([r,v])=>(state.resources[r]||0)>=v)}
+function pay(c){if(!canAfford(c))return false;for(const[r,v]of Object.entries(c))state.resources[r]-=v;return true}
+const symbols={coins:"●",food:"◆",grain:"♢",flour:"○",wood:"▰",stone:"⬟",goods:"⬢"};
+const CHAIN_LINKS={
+ "farm>windmill":{resource:"grain",color:"#c9a24f"},
+ "windmill>bakery":{resource:"flour",color:"#d8cdb5"},
+ "bakery>market":{resource:"food",color:"#75a263"},
+ "bakery>harbor":{resource:"food",color:"#75a263"},
+ "lumber>workshop":{resource:"wood",color:"#916a47"},
+ "quarry>workshop":{resource:"stone",color:"#747e82"},
+ "workshop>market":{resource:"goods",color:"#936fa2"},
+ "workshop>harbor":{resource:"goods",color:"#936fa2"}
+};
+functio
