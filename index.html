@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#9ed7e3">
+<title>ZOLLA v0.5 — Living Island</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <div class="topline">
+      <div class="brand"><strong>ZOLLA</strong><span id="townLevel">Borgo · Lv. 1</span></div>
+      <button id="missionTop" class="missionTop" type="button"><span>OBIETTIVO</span><b id="missionTopTitle">Costruisci una Fattoria</b></button>
+      <button id="statsBtn" class="iconBtn" type="button" aria-label="Panoramica città">☰</button>
+    </div>
+    <div class="resources" aria-label="Risorse">
+      <div class="res coin"><span>●</span><div><small>Monete</small><b id="coins">0</b></div></div>
+      <div class="res food"><span>◆</span><div><small>Cibo</small><b id="food">0</b></div></div>
+      <div class="res grain"><span>♢</span><div><small>Grano</small><b id="grain">0</b></div></div>
+      <div class="res flour"><span>○</span><div><small>Farina</small><b id="flour">0</b></div></div>
+      <div class="res wood"><span>▰</span><div><small>Legno</small><b id="wood">0</b></div></div>
+      <div class="res stone"><span>⬟</span><div><small>Pietra</small><b id="stone">0</b></div></div>
+      <div class="res goods"><span>⬢</span><div><small>Merci</small><b id="goods">0</b></div></div>
+    </div>
+  </header>
+
+  <main id="worldWrap">
+    <canvas id="world" aria-label="La tua isola"></canvas>
+    <button id="cityStatus" class="cityStatus" type="button">
+      <span>☺ <b id="happiness">65</b></span>
+      <span>♟ <b id="population">3</b> abitanti</span>
+      <span>↗ <b id="incomeText">+0.0 ●/s</b></span>
+    </button>
+
+    <div id="toast" class="toast" aria-live="polite"></div>
+
+    <button id="workBtn" class="workDock" type="button">
+      <span class="workIcon">⚒</span>
+      <span><b>LAVORI</b><small id="workReady">attività disponibili</small></span>
+    </button>
+
+    <section id="sheet" class="sheet" aria-label="Azioni zolla">
+      <div class="sheetChrome">
+        <button id="sheetHandle" class="sheetHandle" type="button" aria-label="Espandi o riduci pannello"><span></span></button>
+        <span id="sheetStateLabel">Scorri per i dettagli</span>
+        <button id="sheetClose" class="sheetClose" type="button" aria-label="Chiudi pannello">×</button>
+      </div>
+      <div id="sheetContent" class="sheetContent"></div>
+    </section>
+
+    <section id="choiceModal" class="modal hidden">
+      <div class="modalCard compact">
+        <div class="modalHead"><div><small>SPECIALIZZAZIONE</small><h2 id="choiceTitle">Scegli</h2></div><button id="closeChoice" class="iconBtn" type="button">×</button></div>
+        <div id="choiceContent" class="choiceGrid"></div>
+      </div>
+    </section>
+
+    <section id="workPanel" class="modal hidden">
+      <div class="modalCard jobsCard">
+        <div class="modalHead">
+          <div><small>ATTIVITÀ DEL BORGO</small><h2>Niente tempi morti</h2></div>
+          <button id="closeWork" class="iconBtn" type="button">×</button>
+        </div>
+        <p class="modalIntro">Azioni gratuite a ricarica breve. Servono per dare sempre qualcosa da fare anche quando stai aspettando la produzione.</p>
+        <div id="jobsContent" class="jobsGrid"></div>
+      </div>
+    </section>
+
+    <section id="statsPanel" class="modal hidden">
+      <div class="modalCard">
+        <div class="modalHead"><div><small>IL TUO BORGO</small><h2>Panoramica</h2></div><button id="closeStats" class="iconBtn" type="button">×</button></div>
+        <div id="statsContent"></div>
+      </div>
+    </section>
+
+    <section id="welcome" class="modal">
+      <div class="modalCard welcomeCard">
+        <div class="logoMark">◈</div>
+        <h1>ZOLLA</h1>
+        <p>Costruisci una piccola città che funziona davvero: le risorse viaggiano tra le zolle, gli edifici hanno cicli diversi e le catene produttive diventano visibili.</p>
+        <div class="welcomeGrid">
+          <div><b>Esplora</b><span>Zolle più grandi: trascina con un dito e pizzica per zoomare.</span></div>
+          <div><b>Segui i flussi</b><span>Grano, farina, cibo, materiali e merci viaggiano tra edifici collegati.</span></div>
+          <div><b>Resta attivo</b><span>Lavori ed eventi casuali danno risorse senza dover aspettare.</span></div>
+        </div>
+        <button id="playBtn" class="primary big" type="button">INIZIA L'ISOLA</button>
+      </div>
+    </section>
+  </main>
+</div>
+<script src="game.js"></script>
+</body>
+</html>
