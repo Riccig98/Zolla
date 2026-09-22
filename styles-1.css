@@ -1,0 +1,47 @@
+
+:root{
+  --bg:#090b11;--panel:#11151f;--panel2:#171c28;--line:#252c3a;--text:#eef2f8;--muted:#8c96a8;
+  --accent:#70e7d5;--accent2:#a6fff0;--danger:#ff6e82;--gold:#ffc857;
+  --app-h:100vh;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+button{font:inherit;color:inherit}
+#app{height:var(--app-h);display:flex;flex-direction:column;background:
+  radial-gradient(circle at 75% 15%,rgba(54,110,120,.12),transparent 30%),
+  linear-gradient(180deg,#0b0e15,#090b11 55%,#080a0f);position:relative;overflow:hidden}
+.topbar{height:64px;flex:0 0 auto;padding:8px 10px 7px;display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line);background:rgba(9,11,17,.92);backdrop-filter:blur(14px);z-index:20}
+.brand{display:flex;align-items:center;gap:8px;min-width:0}.brandMark{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,#1f3340,#192029);border:1px solid #365361;color:#a8fff1;font-weight:950;font-size:11px;letter-spacing:.05em;box-shadow:inset 0 0 18px #6ae8d318}
+.brand strong{display:block;font-size:12px;letter-spacing:.08em;white-space:nowrap}.brand small{display:block;font-size:8px;color:var(--muted);margin-top:2px;letter-spacing:.06em}
+.currency{display:flex;gap:6px}.currency>div{height:43px;min-width:72px;padding:5px 8px;border:1px solid var(--line);border-radius:12px;background:#121722;display:grid;grid-template-columns:auto auto;grid-template-rows:1fr 1fr;column-gap:5px;align-items:center}
+.currency span{grid-row:1/3;font-size:14px;color:var(--gold)}.currency>div:last-child span{color:#be94ff}.currency b{font-size:12px}.currency small{font-size:7px;color:var(--muted)}
+.packMeterBar{height:31px;flex:0 0 auto;padding:5px 10px;border-bottom:1px solid #202632;background:#0d1119;display:flex;gap:8px;align-items:center}
+.packMeterInfo{display:flex;justify-content:space-between;gap:8px;min-width:130px;font-size:7px;letter-spacing:.08em;color:var(--muted)}.packMeterInfo b{color:#bdfff5}.meterTrack{height:6px;border-radius:99px;background:#202734;overflow:hidden;flex:1}.meterTrack i{display:block;width:0;height:100%;background:linear-gradient(90deg,#48a79c,#80f2df);border-radius:99px;transition:width .25s}
+
+.views{flex:1;min-height:0;position:relative;overflow:hidden}
+.view{position:absolute;inset:0;display:none;overflow-y:auto;padding:14px 10px 110px;overscroll-behavior:contain}.view.active{display:block}
+.viewHead{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin:1px 1px 12px}.viewHead h1{font-size:27px;line-height:1;margin:3px 0 0;letter-spacing:-.035em}.kicker{font-size:8px;color:var(--accent);font-weight:900;letter-spacing:.15em}
+.actionBtn,.chipBtn{border:1px solid #2a3445;background:#151b26;border-radius:13px;min-height:44px;padding:8px 11px;font-size:9px;font-weight:900;letter-spacing:.05em}.actionBtn.accent{background:linear-gradient(135deg,#1a4a46,#183635);border-color:#377f74;color:#b9fff4}.actionBtn span{font-size:14px;margin-right:4px}
+.armoryTools{display:flex;align-items:center;gap:6px;margin-bottom:9px}.chipBtn{min-height:36px;padding:7px 9px;color:#b7c1d0}.inventoryCount{margin-left:auto;text-align:right}.inventoryCount b{font-size:16px;display:block}.inventoryCount small{font-size:7px;color:var(--muted)}
+.tipLine{font-size:9px;line-height:1.4;color:#7f8b9f;background:#10151e;border:1px solid #202838;border-radius:10px;padding:8px 9px;margin-bottom:10px}
+
+.weaponGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding-bottom:8px}
+.weapon-card{position:relative;min-width:0;height:164px;border-radius:15px;border:1px solid var(--rarity-line,#303849);overflow:hidden;background:
+  radial-gradient(circle at 78% 16%,var(--rarity-glow,rgba(255,255,255,.05)),transparent 37%),
+  linear-gradient(155deg,#171c28,#10141d 68%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.015);touch-action:none;user-select:none;transition:transform .12s,border-color .12s,box-shadow .12s}
+.weapon-card.valid-target{border-color:#90ffed;box-shadow:0 0 0 2px #66dbc655,0 0 22px #6affdf35}.weapon-card.drag-source{opacity:.35}.weapon-card.locked:after{content:"◆";position:absolute;right:7px;top:7px;font-size:8px;color:#ffd27c;background:#282113;border:1px solid #564529;padding:3px 4px;border-radius:6px}
+.cardRarity{position:absolute;left:7px;top:7px;padding:3px 6px;border-radius:7px;background:rgba(5,7,11,.7);border:1px solid var(--rarity-line,#444);font-size:8px;font-weight:950;color:var(--rarity,#fff);z-index:2}
+.cardUpgrade{position:absolute;right:7px;bottom:7px;font-size:8px;font-weight:900;color:#c8d2df;background:#0a0d13cc;padding:3px 5px;border-radius:6px}
+.cardArt{height:93px;display:grid;place-items:center;padding:21px 7px 3px;filter:drop-shadow(0 7px 10px #0009)}.cardArt svg{width:100%;height:100%;overflow:visible}
+.cardInfo{padding:5px 8px 8px}.cardInfo b{display:block;font-size:10px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}.cardInfo span{display:block;font-size:7px;color:var(--muted);margin-top:2px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}.powerLine{margin-top:5px!important;color:#dce5f0!important;font-weight:900!important;font-size:8px!important}
+.weapon-card[data-tier="5"],.weapon-card[data-tier="6"],.weapon-card[data-tier="7"]{box-shadow:inset 0 0 22px var(--rarity-glow)}
+.weapon-card[data-tier="7"]:before{content:"";position:absolute;inset:-40%;background:conic-gradient(from 0deg,transparent,#ff73e822,transparent,#76fff122,transparent,#ffe57022,transparent);animation:foil 4s linear infinite;pointer-events:none}
+@keyframes foil{to{transform:rotate(360deg)}}
+
+.emptyState{text-align:center;padding:70px 15px;color:var(--muted)}.emptyState div{font-size:46px}.emptyState b{display:block;color:#dce4ef;margin:7px}.emptyState span{font-size:10px}.hidden{display:none!important}
+
+.packTokens,.codexCount{text-align:right}.packTokens b,.codexCount b{font-size:20px;display:block}.packTokens small,.codexCount small{font-size:8px;color:var(--muted)}
+.packStage{min-height:360px;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:12px 0 6px}
+.foilPack{width:230px;height:300px;border-radius:17px 17px 24px 24px;position:relative;display:flex;flex-direction:column;overflow:hidden;border:1px solid #51606f;background:
+  linear-gradient(125deg,#222a36,#465260 13%,#202735 26%,#64717c 39%,#212938 52%,#515d69 65%,#202735 78%,#75808a 91%,#222a36);
+  box-shadow:0 28px 60px #0009,inset 0 0 34px #d8f7ff1a;transform:perspective(600px) rotateX(2deg);transition:transform .25s,filter .25s}
