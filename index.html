@@ -1,95 +1,152 @@
 <!doctype html>
 <html lang="it">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#9ed7e3">
-<title>ZOLLA v0.5 — Living Island</title>
-<link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#090b11">
+  <title>ARSENAL//MERGE</title>
+  <link rel="stylesheet" href="styles-1.css">
+  <link rel="stylesheet" href="styles-2.css">
+  <link rel="stylesheet" href="styles-3.css">
 </head>
 <body>
 <div id="app">
   <header class="topbar">
-    <div class="topline">
-      <div class="brand"><strong>ZOLLA</strong><span id="townLevel">Borgo · Lv. 1</span></div>
-      <button id="missionTop" class="missionTop" type="button"><span>OBIETTIVO</span><b id="missionTopTitle">Costruisci una Fattoria</b></button>
-      <button id="statsBtn" class="iconBtn" type="button" aria-label="Panoramica città">☰</button>
+    <div class="brand">
+      <div class="brandMark">A/M</div>
+      <div><strong>ARSENAL//MERGE</strong><small id="collectorLevel">COLLEZIONISTA Lv. 1</small></div>
     </div>
-    <div class="resources" aria-label="Risorse">
-      <div class="res coin"><span>●</span><div><small>Monete</small><b id="coins">0</b></div></div>
-      <div class="res food"><span>◆</span><div><small>Cibo</small><b id="food">0</b></div></div>
-      <div class="res grain"><span>♢</span><div><small>Grano</small><b id="grain">0</b></div></div>
-      <div class="res flour"><span>○</span><div><small>Farina</small><b id="flour">0</b></div></div>
-      <div class="res wood"><span>▰</span><div><small>Legno</small><b id="wood">0</b></div></div>
-      <div class="res stone"><span>⬟</span><div><small>Pietra</small><b id="stone">0</b></div></div>
-      <div class="res goods"><span>⬢</span><div><small>Merci</small><b id="goods">0</b></div></div>
+    <div class="currency">
+      <div><span>◈</span><b id="credits">0</b><small>crediti</small></div>
+      <div><span>✦</span><b id="scrap">0</b><small>nuclei</small></div>
     </div>
   </header>
 
-  <main id="worldWrap">
-    <canvas id="world" aria-label="La tua isola"></canvas>
-    <button id="cityStatus" class="cityStatus" type="button">
-      <span>☺ <b id="happiness">65</b></span>
-      <span>♟ <b id="population">3</b> abitanti</span>
-      <span>↗ <b id="incomeText">+0.0 ●/s</b></span>
-    </button>
+  <section class="packMeterBar">
+    <div class="packMeterInfo">
+      <span>PACCHETTO MISTERO</span>
+      <b id="packStatus">0%</b>
+    </div>
+    <div class="meterTrack"><i id="packMeter"></i></div>
+  </section>
 
-    <div id="toast" class="toast" aria-live="polite"></div>
-
-    <button id="workBtn" class="workDock" type="button">
-      <span class="workIcon">⚒</span>
-      <span><b>LAVORI</b><small id="workReady">attività disponibili</small></span>
-    </button>
-
-    <section id="sheet" class="sheet" aria-label="Azioni zolla">
-      <div class="sheetChrome">
-        <button id="sheetHandle" class="sheetHandle" type="button" aria-label="Espandi o riduci pannello"><span></span></button>
-        <span id="sheetStateLabel">Scorri per i dettagli</span>
-        <button id="sheetClose" class="sheetClose" type="button" aria-label="Chiudi pannello">×</button>
+  <main class="views">
+    <section id="view-armory" class="view active">
+      <div class="viewHead">
+        <div><span class="kicker">ARMI POSSEDUTE</span><h1>Armeria</h1></div>
+        <button id="autoMergeBtn" class="actionBtn accent" type="button"><span>⟲</span> AUTO-FUSIONE</button>
       </div>
-      <div id="sheetContent" class="sheetContent"></div>
-    </section>
-
-    <section id="choiceModal" class="modal hidden">
-      <div class="modalCard compact">
-        <div class="modalHead"><div><small>SPECIALIZZAZIONE</small><h2 id="choiceTitle">Scegli</h2></div><button id="closeChoice" class="iconBtn" type="button">×</button></div>
-        <div id="choiceContent" class="choiceGrid"></div>
+      <div class="armoryTools">
+        <button id="sortBtn" class="chipBtn" type="button">ORDINA: POTENZA</button>
+        <button id="filterBtn" class="chipBtn" type="button">TUTTE LE RARITÀ</button>
+        <div class="inventoryCount"><b id="inventoryCount">0</b><small>armi</small></div>
+      </div>
+      <div class="tipLine">Trascina un'arma sopra una copia identica per fonderle. Tocca una carta per aprire le specifiche.</div>
+      <div id="inventoryGrid" class="weaponGrid"></div>
+      <div id="emptyArmory" class="emptyState hidden">
+        <div>◇</div><b>Armeria vuota</b><span>Apri un pacchetto misterioso per iniziare.</span>
       </div>
     </section>
 
-    <section id="workPanel" class="modal hidden">
-      <div class="modalCard jobsCard">
-        <div class="modalHead">
-          <div><small>ATTIVITÀ DEL BORGO</small><h2>Niente tempi morti</h2></div>
-          <button id="closeWork" class="iconBtn" type="button">×</button>
+    <section id="view-pack" class="view">
+      <div class="viewHead">
+        <div><span class="kicker">PESCA MISTERIOSA</span><h1>Pacchetto</h1></div>
+        <div class="packTokens"><b id="packTokens">0</b><small>disponibili</small></div>
+      </div>
+
+      <div id="packStage" class="packStage">
+        <div id="packWrapper" class="foilPack">
+          <div class="foilTop">ARSENAL</div>
+          <div class="foilCore"><span>?</span><b>MYSTERY DROP</b><small>5 ARMI</small></div>
+          <div class="foilBottom">C → SSS</div>
         </div>
-        <p class="modalIntro">Azioni gratuite a ricarica breve. Servono per dare sempre qualcosa da fare anche quando stai aspettando la produzione.</p>
-        <div id="jobsContent" class="jobsGrid"></div>
+        <button id="openPackBtn" class="bigCta" type="button">APRI PACCHETTO</button>
+        <div id="freePackTimer" class="freeTimer">Prossimo gratuito tra 03:00</div>
       </div>
-    </section>
 
-    <section id="statsPanel" class="modal hidden">
-      <div class="modalCard">
-        <div class="modalHead"><div><small>IL TUO BORGO</small><h2>Panoramica</h2></div><button id="closeStats" class="iconBtn" type="button">×</button></div>
-        <div id="statsContent"></div>
+      <div id="revealArea" class="revealArea hidden">
+        <div class="revealHead"><b>CONTENUTO PACCHETTO</b><button id="revealAllBtn" type="button">RIVELA TUTTE</button></div>
+        <div id="packCards" class="packCards"></div>
+        <button id="packDoneBtn" class="bigCta hidden" type="button">PORTA IN ARMERIA</button>
       </div>
-    </section>
 
-    <section id="welcome" class="modal">
-      <div class="modalCard welcomeCard">
-        <div class="logoMark">◈</div>
-        <h1>ZOLLA</h1>
-        <p>Costruisci una piccola città che funziona davvero: le risorse viaggiano tra le zolle, gli edifici hanno cicli diversi e le catene produttive diventano visibili.</p>
-        <div class="welcomeGrid">
-          <div><b>Esplora</b><span>Zolle più grandi: trascina con un dito e pizzica per zoomare.</span></div>
-          <div><b>Segui i flussi</b><span>Grano, farina, cibo, materiali e merci viaggiano tra edifici collegati.</span></div>
-          <div><b>Resta attivo</b><span>Lavori ed eventi casuali danno risorse senza dover aspettare.</span></div>
+      <details class="odds">
+        <summary>Probabilità rarità</summary>
+        <div class="oddsGrid">
+          <span>C <b>50%</b></span><span>U <b>25%</b></span><span>R <b>12%</b></span><span>E <b>6%</b></span>
+          <span>L <b>3,5%</b></span><span>S <b>2%</b></span><span>SS <b>1%</b></span><span>SSS <b>0,5%</b></span>
         </div>
-        <button id="playBtn" class="primary big" type="button">INIZIA L'ISOLA</button>
+      </details>
+    </section>
+
+    <section id="view-range" class="view">
+      <div class="viewHead">
+        <div><span class="kicker">TEST DAL VIVO</span><h1>Poligono</h1></div>
+        <button id="rangeWeaponBtn" class="chipBtn" type="button">CAMBIA ARMA</button>
       </div>
+
+      <div class="rangeWeaponStrip">
+        <div id="rangeMiniArt" class="rangeMiniArt"></div>
+        <div><small id="rangeRarity">—</small><b id="rangeWeaponName">Scegli un'arma</b><span id="rangeWeaponMeta">—</span></div>
+        <div class="rangeAmmo"><b id="ammoText">—</b><small>caricatore</small></div>
+      </div>
+
+      <div class="rangeFrame">
+        <canvas id="rangeCanvas"></canvas>
+        <div class="rangeHud">
+          <div><small>PUNTI</small><b id="rangeScore">0</b></div>
+          <div><small>TEMPO</small><b id="rangeTime">20.0</b></div>
+          <div><small>PRECISIONE</small><b id="rangeAccuracy">0%</b></div>
+        </div>
+        <div id="crosshair" class="crosshair"><i></i><i></i></div>
+      </div>
+
+      <div class="rangeControls">
+        <button id="startRangeBtn" class="rangeStart" type="button">INIZIA TEST</button>
+        <button id="fireBtn" class="fireBtn" type="button">FUOCO</button>
+        <button id="reloadBtn" class="reloadBtn" type="button">RICARICA</button>
+      </div>
+      <div id="rangeResult" class="rangeResult hidden"></div>
+    </section>
+
+    <section id="view-codex" class="view">
+      <div class="viewHead">
+        <div><span class="kicker">COLLEZIONE</span><h1>Archivio</h1></div>
+        <div class="codexCount"><b id="codexCount">0/64</b><small>scoperte</small></div>
+      </div>
+      <div id="codexFamilies" class="codexFamilies"></div>
     </section>
   </main>
+
+  <nav class="bottomNav">
+    <button class="navBtn active" data-view="armory" type="button"><span>▦</span><b>Armeria</b></button>
+    <button class="navBtn" data-view="pack" type="button"><span>◇</span><b>Pacchetto</b><em id="packNavBadge" class="navBadge hidden">1</em></button>
+    <button class="navBtn" data-view="range" type="button"><span>◎</span><b>Prova</b></button>
+    <button class="navBtn" data-view="codex" type="button"><span>▤</span><b>Archivio</b></button>
+  </nav>
+
+  <div id="detailSheet" class="sheet">
+    <div class="sheetGrip"></div>
+    <button id="closeSheet" class="sheetClose" type="button">×</button>
+    <div id="detailContent"></div>
+  </div>
+
+  <div id="rangePicker" class="modal hidden">
+    <div class="modalCard">
+      <div class="modalHead"><div><small>SCEGLI ARMA</small><h2>Poligono</h2></div><button id="closePicker" type="button">×</button></div>
+      <div id="pickerGrid" class="pickerGrid"></div>
+    </div>
+  </div>
+
+  <div id="mergeBurst" class="mergeBurst hidden"><span>FUSIONE</span><b id="mergeBurstName"></b></div>
+  <div id="toast" class="toast"></div>
 </div>
-<script src="game.js"></script>
+<script src="game-1.js"></script>
+<script src="game-2.js"></script>
+<script src="game-3.js"></script>
+<script src="game-4.js"></script>
+<script src="game-5.js"></script>
+<script src="game-6.js"></script>
+<script src="game-7.js"></script>
 </body>
 </html>
