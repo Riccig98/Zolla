@@ -1,112 +1,58 @@
-# ZOLLA — Island Builder v0.5
+# ARSENAL//MERGE
 
-Mobile-first incremental city-builder a zolle/isole.
+Mobile-first merge/collection game in puro HTML, CSS e JavaScript.
 
-## Cosa cambia nella v0.5
+Questo progetto sostituisce completamente il precedente city-builder ZOLLA.
 
-- Funziona sia in verticale sia in orizzontale.
-- Trascinamento della mappa con un dito/mouse.
-- Pinch-to-zoom con due dita e zoom con rotella su desktop.
-- Interfaccia fullscreen: nessun pannello laterale permanente.
-- Pannello azioni dal basso, pensato per il pollice.
-- 10 tipologie di edificio e 5 terreni.
-- Catene produttive reali:
-  - Fattorie → Cibo
-  - Silvicoltura → Legno
-  - Cave → Pietra
-  - Officine: Legno + Pietra → Merci
-  - Mercati: Merci → Monete
-  - Porti: Merci + Cibo → Monete
-- Popolazione che consuma cibo.
-- Felicità cittadina che influenza l'economia.
-- Bonus di terreno e bonus di quartiere/adiacenza.
-- Ogni edificio arriva al livello 10.
-- Dal livello 5 ogni zolla può scegliere una specializzazione permanente fra due rami.
-- Missioni progressive con premi.
-- Produzione offline fino a 8 ore.
-- Salvataggio automatico locale.
+## Loop principale
+
+1. Ottieni armi dai Pacchetti Misteriosi.
+2. Trascina due armi identiche una sopra l'altra per fonderle.
+3. La fusione produce il livello/rango successivo della stessa linea.
+4. `AUTO-FUSIONE` esegue automaticamente tutte le fusioni disponibili.
+5. Potenzia individualmente le armi con Crediti e Nuclei.
+6. Prova qualunque arma nel Poligono e ottieni ricompense.
+7. Completa l'Archivio da C fino a SSS.
+
+## Contenuti v1
+
+- 8 famiglie di armi fittizie:
+  - Pistole
+  - Mitragliette
+  - Fucili
+  - Scattergun
+  - Precisione
+  - Pesanti
+  - Energia
+  - Lame
+- 8 ranghi per famiglia: C, U, R, E, L, S, SS, SSS.
+- 64 armi uniche da scoprire.
+- Nomi, trait, statistiche e sagome grafiche diverse per ogni progressione.
+- Drag & drop touch/mobile per la fusione.
+- Auto-fusione.
+- Upgrade individuale +0 → +10.
+- Pacchetti misteriosi da 5 armi.
+- Probabilità di rarità dichiarate nell'interfaccia.
+- Un pacchetto gratuito periodico.
+- Progressione pacchetto guadagnata giocando, non tramite energia.
+- Poligono giocabile:
+  - mira touch
+  - cadenza reale per categoria
+  - caricatore
+  - ricarica
+  - precisione/spread
+  - pallettoni per scattergun
+  - bersagli mobili
+  - ricompense
+- Archivio/collezione 64/64.
+- Salvataggio locale automatico.
+
+## Filosofia
+
+La v1 evita un energy meter che impedisca di continuare a giocare. Merge, upgrade e poligono alimentano il prossimo pacchetto, così il giocatore ha sempre un'attività utile.
+
+Le armi e le specifiche sono completamente fittizie e progettate per il gioco.
 
 ## Avvio
 
-Apri `index.html` nel browser. Non ci sono dipendenze esterne.
-
-## File
-
-- `index.html` — struttura UI
-- `styles.css` — layout e UX mobile
-- `game.js` — simulazione, renderer isometrico, economia e salvataggio
-
-## Direzione successiva
-
-- strade e piazze fisiche;
-- residenti animati;
-- navi e rotte commerciali;
-- eventi/stagioni;
-- nuove isole e biomi;
-- ricerca tecnologica;
-- edifici unici;
-- PWA installabile;
-- bilanciamento economico su run lunghe.
-
-
-## Novità v0.5
-
-- UI mobile ridisegnata: testi, pulsanti, pannelli e zolle molto più grandi.
-- Zoom iniziale ravvicinato: non tenta più di mostrare tutta l'isola in una volta.
-- Quattro attività gratuite con cooldown breve per eliminare i tempi morti:
-  - Squadra di raccolta
-  - Lavori civici
-  - Festa di piazza
-  - Recupero costiero
-- Eventi toccabili che compaiono direttamente sopra le zolle e danno risorse.
-- Città visivamente viva:
-  - strade automatiche tra edifici adiacenti
-  - abitanti in movimento
-  - carri
-  - barche ai porti
-  - fumo da case e officine
-  - raccolti animati
-  - pale del mulino
-  - indicatori di produzione che salgono dagli edifici
-- Migrazione automatica dei salvataggi v0.2.
-
-
-## UX v0.5
-
-- Barra alta a due livelli con risorse grandi e leggibili.
-- Obiettivo integrato nella testata, senza card minuscole sulla mappa.
-- Stato città in una sola barra leggibile.
-- Camera iniziale ravvicinata e auto-centering sulla città.
-- Zolle più grandi su telefono.
-- Bottom sheet a due altezze (medio/espanso), con pulsante chiudi separato.
-- Informazioni principali ridotte a 3 card grandi: produzione, bonus, stato.
-- CTA principali da almeno 50px.
-- Costruzione con grandi righe verticali, non phù mini-card orizzontali.
-- Se mancano risorse, accesso immediato ai Lavori.
-- Salvataggi v0.3 migrati automaticamente.
-
-
-## Novità v0.5 — Living Production
-
-- Nuova catena alimentare:
-  - Fattoria → Grano
-  - Mulino → Farina
-  - Panificio → Cibo
-  - Mercato → Monete
-- Catena industriale leggibile:
-  - Silvicoltura + Cava → Officina → Merci → Mercato / Porto
-- Nuove risorse intermedie: Grano e Farina.
-- Nuovo edificio: Panificio.
-- Mulino disponibile molto prima nella progressione.
-- Missioni iniziali ridisegnate per insegnare le catene.
-- Collegamenti produttivi visibili direttamente sulla città:
-  - linee di flusso
-  - pacchi di risorsa animati fra edifici adiacenti
-- Edifici più diversi graficamente:
-  - fumo e forno nel Panificio
-  - scintille nell’Officina
-  - coltivazioni più ricche con i livelli
-  - decorazioni aggiuntive ai livelli alti
-  - brevi impalcature durante costruzione e upgrade
-- Il pannello di una zolla mostra ora chiaramente la sua catena input → output.
-- Salvataggi v0.4 migrati automaticamente.
+Apri `index.html` in un browser moderno. Non ci sono dipendenze esterne.
